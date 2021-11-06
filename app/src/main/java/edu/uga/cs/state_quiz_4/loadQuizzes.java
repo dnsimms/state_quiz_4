@@ -1,13 +1,18 @@
 package edu.uga.cs.state_quiz_4;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.io.InputStream;
+
 public class loadQuizzes extends SQLiteOpenHelper {
     private static final String DEBUG_TAG = "loadQuizzes";
     private static final String DB_NAME = "quizzes.db";
+    private static long incVal;
+    private SQLiteDatabase dataB;
 
     //First, we will declare our table/column names
     public static final String TABLE_QUIZZES = "quizzes";
@@ -23,6 +28,8 @@ public class loadQuizzes extends SQLiteOpenHelper {
             + " INTEGER PRIMARY KEY AUTOINCREMENT, " + QUIZZES_COLUMN_STATE
             + " TEXT, " + QUIZZES_COLUMN_CAPITAL + " TEXT, " + QUIZZES_COLUMN_ALT1
             + " TEXT, " + QUIZZES_COLUMN_ALT2 + " TEXT" + ")";
+
+    public void setInc(long inc) {incVal = inc;}
 
     //Let's use the singleton way to refer to the instance
     //refers to the instance we made
@@ -45,6 +52,7 @@ public class loadQuizzes extends SQLiteOpenHelper {
         return quizInstance;
     }
 
+
     //On create will bring the table to life
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -52,10 +60,25 @@ public class loadQuizzes extends SQLiteOpenHelper {
         Log.d(DEBUG_TAG, "Table " + TABLE_QUIZZES + " is here");
     }
 
+
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("drop table if exists " + TABLE_QUIZZES);
         onCreate(db);
         Log.d(DEBUG_TAG, "Table " + TABLE_QUIZZES + " was upgradedd");
+    }
+
+
+    public void open(){
+        dataB = this.getWritableDatabase();
+    }
+
+    //close database
+    public void close(){
+        if(quizInstance != null){
+            quizInstance.close();
+            Log.d(DEBUG_TAG, "Database is closed");
+        }
     }
 }
