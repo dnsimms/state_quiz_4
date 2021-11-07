@@ -29,6 +29,27 @@ public class MainActivity extends AppCompatActivity {
         new populateBase().execute();
     }
 
+    /**
+     * Helper method to insert the csv data into the database
+     * @param state state
+     * @param capital capital
+     * @param alt1 second city
+     * @param alt2 third city
+     * @return true is inserted correctly, false otherwise
+     */
+    public Boolean insertData(String state, String capital, String alt1, String alt2){
+        ContentValues values = new ContentValues();
+        values.put(loadQuizzes.QUIZZES_COLUMN_STATE, state);
+        values.put(loadQuizzes.QUIZZES_COLUMN_CAPITAL, capital);
+        values.put(loadQuizzes.QUIZZES_COLUMN_ALT1, alt1);
+        values.put(loadQuizzes.QUIZZES_COLUMN_ALT2, alt2);
+        long result = db.insert(loadQuizzes.TABLE_QUIZZES, null, values);
+        if(result == -1){
+            return false;
+        }
+            return true;
+    }
+
     public class populateBase extends AsyncTask{
 
         @Override
@@ -39,47 +60,45 @@ public class MainActivity extends AppCompatActivity {
             //reading csv
             try{
                 String[] lines;
-                String file = "";
 
                 streamer = getAssets().open("state_capitals.csv");
+                //an external library method, must add a dependency to your gradle
                 viewer = new CSVReader(new InputStreamReader(streamer));
                 while((lines = viewer.readNext()) !=null){
-                    //file = lines;
-                    //int finder =0;
                     int count = 0;
-                    String word = "";
+                    String state = "";
+                    String capital = "";
+                    String alt1 = "";
+                    String alt2 = "";
                     for(int i = 0; i < lines.length; i++){
                         if(count == 0){
-                            word = lines[i];
-                            values.put(loadQuizzes.QUIZZES_COLUMN_STATE, word);
+                            state = lines[i];
                         }else if(count == 1){
-                            word = lines[i];
-                            values.put(loadQuizzes.QUIZZES_COLUMN_CAPITAL, word);
+                            capital = lines[i];
                         }else if(count ==2){
-                            word = lines[i];
-                            values.put(loadQuizzes.QUIZZES_COLUMN_ALT1, word);
+                            alt1 = lines[i];
                         }else if(count == 3){
-                            word = lines[i];
-                            values.put(loadQuizzes.QUIZZES_COLUMN_ALT2, word);
+                            alt2 = lines[i];
                         }
+
                         if(count != 3){
                             ++count;
                         }else{
                             count = 0;
+                            if(insertData(state, capital, alt1, alt2)){
+                                isWorking = true;
+                            }
+
                         }
                     }
 
                 }
-                long result = db.insert(loadQuizzes.TABLE_QUIZZES, null, values);
-                if(result == -1){
-                    isWorking = false;
-                }else{
-                    isWorking = true;
-                }
+
 
             }catch (Exception e){
                 e.printStackTrace();
             }
+            db.close();
             return isWorking;
         }
 
@@ -89,38 +108,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-    public class dataWriter extends AsyncTask{
-
-        @Override
-        protected Object doInBackground(Object[] arguments) {
-            point.open();
-
-            if(point.populateBase()){
-                Log.d("Main", "New table made with data" );
-            }else{
-                Log.d("Main", "New table FAILED" );
-            }
-            return arguments;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-
-        }
-    }**/
     @Override
     protected void onResume() {
-        if(point != null){
+        if(db != null){
             loadQuizzes.getInstance(this).open();
-        }
+       }
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        if(point != null){
-            point.close();
+        if(db != null){
+            db.close();
         }
         super.onPause();
     }
