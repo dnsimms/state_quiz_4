@@ -11,8 +11,7 @@ import java.io.InputStream;
 public class loadQuizzes extends SQLiteOpenHelper {
     private static final String DEBUG_TAG = "loadQuizzes";
     private static final String DB_NAME = "quizzes.db";
-    private static long incVal;
-    private SQLiteDatabase dataB;
+    public SQLiteDatabase dataB;
 
     //First, we will declare our table/column names
     public static final String TABLE_QUIZZES = "quizzes";
@@ -29,7 +28,7 @@ public class loadQuizzes extends SQLiteOpenHelper {
             + " TEXT, " + QUIZZES_COLUMN_CAPITAL + " TEXT, " + QUIZZES_COLUMN_ALT1
             + " TEXT, " + QUIZZES_COLUMN_ALT2 + " TEXT" + ")";
 
-    public void setInc(long inc) {incVal = inc;}
+
 
     //Let's use the singleton way to refer to the instance
     //refers to the instance we made
