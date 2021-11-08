@@ -3,10 +3,13 @@ package edu.uga.cs.state_quiz_4;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.opencsv.CSVReader;
 
@@ -18,15 +21,29 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteOpenHelper point;
     private InputStream streamer = null;
     private CSVReader viewer = null;
+    private Button button;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_splash_screen);
         point = loadQuizzes.getInstance(this);
         db = loadQuizzes.getInstance(this).getWritableDatabase();
+
+        button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openQuiz();
+            }
+        });
         new populateBase().execute();
+    }
+
+    public void openQuiz() {
+        Intent intent = new Intent(this, Quiz.class);
+        startActivity(intent);
     }
 
     /**
