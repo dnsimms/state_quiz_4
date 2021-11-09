@@ -71,12 +71,4 @@
         app:layout_constraintTop_toBottomOf="@+id/radioGroup"
         app:layout_constraintVertical_bias="0.294" />
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment1"
-        class="edu.uga.cs.state_quiz_4.Quiz"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:tag="fragment1"
-        android:visibility="invisible" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
