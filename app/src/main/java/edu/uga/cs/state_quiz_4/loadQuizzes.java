@@ -65,13 +65,9 @@ public class loadQuizzes extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("drop table if exists " + TABLE_QUIZZES);
         onCreate(db);
-        Log.d(DEBUG_TAG, "Table " + TABLE_QUIZZES + " was upgradedd");
+        Log.d(DEBUG_TAG, "Table " + TABLE_QUIZZES + " was upgraded");
     }
 
-
-    public void open(){
-        dataB = this.getWritableDatabase();
-    }
 
     //close database
     public void close(){

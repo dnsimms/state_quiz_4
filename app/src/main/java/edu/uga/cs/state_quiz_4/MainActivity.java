@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteOpenHelper point;
     private InputStream streamer = null;
     private CSVReader viewer = null;
-    private Button button;
+    private Button start;
 
 
     @Override
@@ -31,10 +30,12 @@ public class MainActivity extends AppCompatActivity {
         point = loadQuizzes.getInstance(this);
         db = loadQuizzes.getInstance(this).getWritableDatabase();
 
-        button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+        start = findViewById(R.id.startQuiz);
+
+        start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 openQuiz();
             }
         });
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         if(db != null){
-            loadQuizzes.getInstance(this).open();
+            loadQuizzes.getInstance(this).getWritableDatabase();
        }
         super.onResume();
     }
