@@ -36,7 +36,9 @@ public class loadQuizzes extends SQLiteOpenHelper {
 
     //This will create our version 1 database
     private loadQuizzes(Context context){
+
         super(context, DB_NAME, null, 1);
+        context.deleteDatabase(DB_NAME);
     }
 
     /**
@@ -55,6 +57,7 @@ public class loadQuizzes extends SQLiteOpenHelper {
     //On create will bring the table to life
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL("drop table if exists " + TABLE_QUIZZES);
         db.execSQL(CREATE_TABLE);
         Log.d(DEBUG_TAG, "Table " + TABLE_QUIZZES + " is here");
     }

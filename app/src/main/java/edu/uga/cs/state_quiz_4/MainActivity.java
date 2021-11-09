@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        point = loadQuizzes.getInstance(this);
         db = loadQuizzes.getInstance(this).getWritableDatabase();
 
         start = findViewById(R.id.startQuiz);
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                db.close();
                 openQuiz();
             }
         });
@@ -116,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
             }catch (Exception e){
                 e.printStackTrace();
             }
-            db.close();
             return isWorking;
         }
 

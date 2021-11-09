@@ -38,6 +38,8 @@ public class Quiz extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
         db = loadQuizzes.getInstance(this).getWritableDatabase();
+
+
         chosenStateName = findViewById(R.id.chosenStateName);
         radioGroup = findViewById(R.id.radioGroup);
         choice1 = findViewById(R.id.choice1);
@@ -48,9 +50,13 @@ public class Quiz extends AppCompatActivity {
         selectQuizzes();
 
         chosenStateName.setText(quizQuestions.get(0));
+        System.out.println(quizQuestions.get(0));
         choice1.setText(quizQuestions.get(1));
+        System.out.println(choice1.getText());
         choice2.setText(quizQuestions.get(2));
+        System.out.println(choice2.getText());
         choice3.setText(quizQuestions.get(3));
+        System.out.println(choice3.getText());
 
         nextButtion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,12 +64,21 @@ public class Quiz extends AppCompatActivity {
                 if(radioGroup.getCheckedRadioButtonId() == -1){
                     //no buttons have been selected
                 }else{
-                    if(pushes < 6){
+                    if(pushes < 7){
+                        System.out.println(pushes);
                         ++pushes;
                         chosenStateName.setText(quizQuestions.get(track));
-                        choice1.setText(quizQuestions.get(++track));
-                        choice2.setText(quizQuestions.get(++track));
-                        choice3.setText(quizQuestions.get(++track));
+                        System.out.println(chosenStateName.getText());
+                        ++track;
+                        choice1.setText(quizQuestions.get(track));
+                        System.out.println(choice1.getText());
+                        ++track;
+                        choice2.setText(quizQuestions.get(track));
+                        System.out.println(choice2.getText());
+                        ++track;
+                        choice3.setText(quizQuestions.get(track));
+                        System.out.println(choice3.getText());
+                        ++track;
                     }else{
                         //end quiz
                     }
@@ -75,6 +90,18 @@ public class Quiz extends AppCompatActivity {
     }
 
 
+    public void insertQuestions(Cursor cursor){
+        String state, cap, alt1, alt2;
+        state = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_STATE));
+        cap = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_CAPITAL));
+        alt1 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT1));
+        alt2 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT2));
+        quizQuestions.add(state);
+        quizQuestions.add(cap);
+        quizQuestions.add(alt1);
+        quizQuestions.add(alt2);
+    }
+
 
 
     public void selectQuizzes() {
@@ -84,76 +111,21 @@ public class Quiz extends AppCompatActivity {
         try{
             cursor = db.query(loadQuizzes.TABLE_QUIZZES, grabAllColumns,
                     null, null, null, null, null);
-            int max = 50, min = 1, counter = 0;
+            int max = 50, min = 2, counter = 0;
             Random rand = new Random();
             int[] values = new int[6]; //this will hold the random generated ids
             for(int i = 0; i < 6; i++){
                 values[i] = rand.nextInt((max-min) + 1) + min;
             }
-            String state1, state2, state3, state4, state5, state6;
-            String cap1, cap2, cap3, cap4, cap5, cap6;
-            String sec1, sec2, sec3, sec4, sec5, sec6;
-            String thir1, thir2, thir3, thir4, thir5, thir6;
+
 
             if(cursor.getCount() > 0){
                 while(cursor.moveToNext()){
                     long inc = cursor.getLong(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_INC));
                     if((inc == values[0]) || (inc == values[1] )|| (inc == values[2]) || (inc == values[3])
                             || (inc == values[4]) || (inc == values[5])){
-                        if(counter == 0){
-                            state1 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_STATE));
-                            cap1 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_CAPITAL));
-                            sec1 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT1));
-                            thir1 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT2));
-                            quizQuestions.add(state1);
-                            quizQuestions.add(cap1);
-                            quizQuestions.add(sec1);
-                            quizQuestions.add(thir1);
-                        }else if (counter == 1){
-                            state2 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_STATE));
-                            cap2 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_CAPITAL));
-                            sec2 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT1));
-                            thir2 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT2));
-                            quizQuestions.add(state2);
-                            quizQuestions.add(cap2);
-                            quizQuestions.add(sec2);
-                            quizQuestions.add(thir2);
-                        }else if (counter == 2){
-                            state3 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_STATE));
-                            cap3 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_CAPITAL));
-                            sec3 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT1));
-                            thir3 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT2));
-                            quizQuestions.add(state3);
-                            quizQuestions.add(cap3);
-                            quizQuestions.add(sec3);
-                            quizQuestions.add(thir3);
-                        }else if (counter == 3){
-                            state4 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_STATE));
-                            cap4 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_CAPITAL));
-                            sec4 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT1));
-                            thir4 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT2));
-                            quizQuestions.add(state4);
-                            quizQuestions.add(cap4);
-                            quizQuestions.add(sec4);
-                            quizQuestions.add(thir4);
-                        }else if (counter == 4){
-                            state5 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_STATE));
-                            cap5 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_CAPITAL));
-                            sec5 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT1));
-                            thir5 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT2));
-                            quizQuestions.add(state5);
-                            quizQuestions.add(cap5);
-                            quizQuestions.add(sec5);
-                            quizQuestions.add(thir5);
-                        }else if (counter == 5){
-                            state6 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_STATE));
-                            cap6 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_CAPITAL));
-                            sec6 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT1));
-                            thir6 = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_ALT2));
-                            quizQuestions.add(state6);
-                            quizQuestions.add(cap6);
-                            quizQuestions.add(sec6);
-                            quizQuestions.add(thir6);
+                        if((counter == 0) ||(counter == 1) || (counter == 2) || (counter == 3) || (counter == 4) || (counter == 5)){
+                            insertQuestions(cursor);
                         }//end else if
                         ++counter;
                     }//top iff
@@ -166,6 +138,7 @@ public class Quiz extends AppCompatActivity {
         }finally{
             if(cursor != null){
                 cursor.close();
+                db.close();
             }
         }
     }
