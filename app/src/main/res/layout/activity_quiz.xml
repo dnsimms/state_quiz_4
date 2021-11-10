@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Quiz">
+    tools:context=".quiz_questions_frag">
 
     <TextView
         android:id="@+id/questionTitle"
@@ -64,6 +64,7 @@
         android:layout_width="364dp"
         android:layout_height="80dp"
         android:text="Next"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.489"

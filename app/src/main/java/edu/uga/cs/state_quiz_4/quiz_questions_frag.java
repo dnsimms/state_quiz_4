@@ -1,23 +1,28 @@
-/**package edu.uga.cs.state_quiz_4;
-
-import androidx.appcompat.app.AppCompatActivity;
+package edu.uga.cs.state_quiz_4;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Quiz extends AppCompatActivity {
+public class quiz_questions_frag extends Fragment {
+
     private SQLiteDatabase db;
-    public int pushes =0, track = 4;
+    public int pushes =0, track = 0;
     private static final String[] grabAllColumns = {
             loadQuizzes.QUIZZES_COLUMN_INC,
             loadQuizzes.QUIZZES_COLUMN_STATE,
@@ -28,65 +33,64 @@ public class Quiz extends AppCompatActivity {
     private TextView chosenStateName;
     private RadioButton choice1, choice2, choice3;
     private RadioGroup radioGroup;
-    private Button nextButtion;
+    private int position;
     public ArrayList<String> quizQuestions;
 
-    private static final String DEBUG_TAG = "Quiz.java";
+    private static final String DEBUG_TAG = "quiz_questions_frag";
+
+
+    public quiz_questions_frag(int pos){
+        position = pos;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quiz);
-        db = loadQuizzes.getInstance(this).getWritableDatabase();
-
-
-        chosenStateName = findViewById(R.id.chosenStateName);
-        radioGroup = findViewById(R.id.radioGroup);
-        choice1 = findViewById(R.id.choice1);
-        choice2 = findViewById(R.id.choice2);
-        choice3 = findViewById(R.id.choice3);
-        nextButtion = findViewById(R.id.nextButton);
-        quizQuestions = new ArrayList<>();
-        //copied until above
-        selectQuizzes();
-
-        chosenStateName.setText(quizQuestions.get(0));
-        choice1.setText(quizQuestions.get(1));
-        choice2.setText(quizQuestions.get(2));
-        choice3.setText(quizQuestions.get(3));
-
-        nextButtion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(radioGroup.getCheckedRadioButtonId() == -1){
-                    //no buttons have been selected
-                }else{
-                    if(pushes < 7){
-                        System.out.println(pushes);
-                        ++pushes;
-                        chosenStateName.setText(quizQuestions.get(track));
-                        System.out.println(chosenStateName.getText());
-                        ++track;
-                        choice1.setText(quizQuestions.get(track));
-                        System.out.println(choice1.getText());
-                        ++track;
-                        choice2.setText(quizQuestions.get(track));
-                        System.out.println(choice2.getText());
-                        ++track;
-                        choice3.setText(quizQuestions.get(track));
-                        System.out.println(choice3.getText());
-                        ++track;
-                    }else{
-                        //end quiz
-                    }
-
-                }
-            }
-        });
-
     }
 
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_quiz, container, false);
+
+        db = loadQuizzes.getInstance(getContext()).getWritableDatabase(); // this gets the created database
+
+        chosenStateName = view.findViewById(R.id.chosenStateName);// has the state name
+        radioGroup = view.findViewById(R.id.radioGroup);
+        choice1 = view.findViewById(R.id.choice1);
+        choice2 = view.findViewById(R.id.choice2);
+        choice3 = view.findViewById(R.id.choice3);
+        quizQuestions = new ArrayList<>();
+        selectQuizzes();//grabs the quiz questions
+        updatePosition();//puts them in the buttons
+
+        //TODO: you can use radioGroup.getCheckedRadioButtonId to know
+        //TODO: if something is clicked, if it's == -1 it is not clicked
+        //TODO: I would create a method to use elseifs and manually check what state chosenStateName has and then see if the selected answer matches the hard coded correct answer in ur method
+        return view;
+    }
+
+
+    /**
+     * This puts the text for the questions and answers
+     */
+    public void updatePosition (){
+        chosenStateName.setText(quizQuestions.get(track));
+        ++track;
+        choice1.setText(quizQuestions.get(track));
+        ++track;
+        choice2.setText(quizQuestions.get(track));
+        ++track;
+        choice3.setText(quizQuestions.get(track));
+        ++track;
+    }//don't mess with this
+
+    /**
+     * Adds each question into the array list. They are in order of state, capital, alt1, alt2.
+     * @param cursor database cursor
+     */
     public void insertQuestions(Cursor cursor){
         String state, cap, alt1, alt2;
         state = cursor.getString(cursor.getColumnIndex(loadQuizzes.QUIZZES_COLUMN_STATE));
@@ -97,10 +101,11 @@ public class Quiz extends AppCompatActivity {
         quizQuestions.add(cap);
         quizQuestions.add(alt1);
         quizQuestions.add(alt2);
-    }
+    }//don't mess with this
 
-
-
+    /**
+     * Randomly grabs rows from the database to create quiz questions
+     */
     public void selectQuizzes() {
 
         Cursor cursor = null;
@@ -113,7 +118,7 @@ public class Quiz extends AppCompatActivity {
             int[] values = new int[6]; //this will hold the random generated ids
             for(int i = 0; i < 6; i++){
                 values[i] = rand.nextInt((max-min) + 1) + min;
-            }
+            }//generates the random row numbers
 
 
             if(cursor.getCount() > 0){
@@ -129,7 +134,7 @@ public class Quiz extends AppCompatActivity {
 
                 }
             }
-            Log.d(DEBUG_TAG, "Number of quiz questions: " + cursor.getCount());
+            Log.d(DEBUG_TAG, "Number of rows: " + cursor.getCount());
         }catch(Exception e){
             Log.d(DEBUG_TAG, "Exception trace: " + e);
         }finally{
@@ -139,4 +144,5 @@ public class Quiz extends AppCompatActivity {
             }
         }
     }
-}**/
+
+}

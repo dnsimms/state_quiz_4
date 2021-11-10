@@ -1,6 +1,7 @@
 package edu.uga.cs.state_quiz_4;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private InputStream streamer = null;
     private CSVReader viewer = null;
     private Button start;
+    private ConstraintLayout splashView;
 
 
     @Override
@@ -30,11 +32,13 @@ public class MainActivity extends AppCompatActivity {
         db = loadQuizzes.getInstance(this).getWritableDatabase();
 
         start = findViewById(R.id.startQuiz);
+        splashView = findViewById(R.id.splashView);
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 db.close();
+                splashView.setVisibility(View.GONE);
                 openQuiz();
             }
         });
@@ -42,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openQuiz() {
-        Intent intent = new Intent(this, Quiz.class);
+        Intent intent = new Intent(this, quizPager.class);
         startActivity(intent);
     }
 

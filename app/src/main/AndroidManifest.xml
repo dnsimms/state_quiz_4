@@ -10,9 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.State_quiz_4">
         <activity
-            android:name=".Quiz"
-            android:exported="true" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -20,6 +17,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".quizPager">
         </activity>
     </application>
 
