@@ -41,6 +41,8 @@ public class quiz_questions_frag extends Fragment {
 
     public quiz_questions_frag(int pos){
         position = pos;
+
+        //TODO: Check to see when pos is == 7 and make chosenStateName, choice1, choice2, choice3 invisible and your designate quiz results buttons and stuff visible
     }
 
     @Override
@@ -67,6 +69,7 @@ public class quiz_questions_frag extends Fragment {
         updatePosition();//puts them in the buttons
 
         //TODO: you can use radioGroup.getCheckedRadioButtonId to know
+        //TODO: google how to check when a specific radio button is clicked
         //TODO: if something is clicked, if it's == -1 it is not clicked
         //TODO: I would create a method to use elseifs and manually check what state chosenStateName has and then see if the selected answer matches the hard coded correct answer in ur method
         return view;
