@@ -17,6 +17,7 @@ public class past_quizzes extends SQLiteOpenHelper {
     public SQLiteDatabase db;
     private static past_quizzes pastInstance;
     private loadQuizzes quizData = null;
+    private int results = 0;
 
 
     //First, we will declare our table/column names
@@ -62,6 +63,9 @@ public class past_quizzes extends SQLiteOpenHelper {
         Log.d(DEBUG_TAG, "Past Quizzes are here");
     }
 
+    public void recieveResults(int res){
+        results = res;
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
