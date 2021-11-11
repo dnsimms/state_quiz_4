@@ -50,6 +50,7 @@ public class quiz_questions_frag extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
 
@@ -58,6 +59,7 @@ public class quiz_questions_frag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_quiz, container, false);
+        setRetainInstance(true);
 
         db = loadQuizzes.getInstance(getContext()).getWritableDatabase(); // this gets the created database
 
@@ -817,14 +819,75 @@ public class quiz_questions_frag extends Fragment {
 
             chosenStateName.setText(quizQuestions.get(track));
             ++track;
-            choice1.setText(quizQuestions.get(track));
-            ++track;
-            choice2.setText(quizQuestions.get(track));
-            ++track;
-            choice3.setText(quizQuestions.get(track));
-            ++track;
+            int randNum;
+            Random random = new Random();
+            //max - min + 1 ) +min
+            randNum = random.nextInt(6-1 + 1) + 1;
 
-            answeredCorrectly = false;
+            if(randNum == 1) {
+
+                choice1.setText(quizQuestions.get(track));
+                ++track;
+                choice2.setText(quizQuestions.get(track));
+                ++track;
+                choice3.setText(quizQuestions.get(track));
+                ++track;
+
+                answeredCorrectly = false;
+            }
+            else if(randNum == 2) {
+                choice2.setText(quizQuestions.get(track));
+                ++track;
+                choice1.setText(quizQuestions.get(track));
+                ++track;
+                choice3.setText(quizQuestions.get(track));
+                ++track;
+
+                answeredCorrectly = false;
+            }
+            else if(randNum == 3) {
+                choice2.setText(quizQuestions.get(track));
+                ++track;
+                choice3.setText(quizQuestions.get(track));
+                ++track;
+                choice1.setText(quizQuestions.get(track));
+                ++track;
+
+                answeredCorrectly = false;
+            }
+            else if(randNum == 4) {
+                choice1.setText(quizQuestions.get(track));
+                ++track;
+                choice3.setText(quizQuestions.get(track));
+                ++track;
+                choice2.setText(quizQuestions.get(track));
+                ++track;
+
+
+                answeredCorrectly = false;
+            }
+            else if(randNum == 5) {
+                choice3.setText(quizQuestions.get(track));
+                ++track;
+                choice1.setText(quizQuestions.get(track));
+                ++track;
+                choice2.setText(quizQuestions.get(track));
+                ++track;
+
+
+                answeredCorrectly = false;
+            }
+            else if(randNum == 6) {
+                choice3.setText(quizQuestions.get(track));
+                ++track;
+                choice2.setText(quizQuestions.get(track));
+                ++track;
+                choice1.setText(quizQuestions.get(track));
+                ++track;
+
+                answeredCorrectly = false;
+            }
+
 
     }//don't mess with this
 
