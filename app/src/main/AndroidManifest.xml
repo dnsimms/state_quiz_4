@@ -21,6 +21,8 @@
         </activity>
         <activity android:name=".quizPager">
         </activity>
+        <activity android:name=".PastResultPage">
+        </activity>
     </application>
 
 </manifest>

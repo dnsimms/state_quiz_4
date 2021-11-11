@@ -23,25 +23,17 @@ public class past_quizzes extends SQLiteOpenHelper {
     //First, we will declare our table/column names
     public static final String TABLE_PQUIZZES = "pastQuizzes";
     public static final String PQUIZ_INC = "inc";
-    public static final String PQUIZ_STATE1 = "state1";
-    public static final String PQUIZ_STATE2 = "state2";
-    public static final String PQUIZ_STATE3 = "state3";
-    public static final String PQUIZ_STATE4 = "state4";
-    public static final String PQUIZ_STATE5 = "state5";
-    public static final String PQUIZ_STATE6 = "state6";
     public static final String PQUIZ_CORRECT = "correctAnswers";
     public static final String PQUIZ_DATE = "date";
 
     private static final String CREATE_TABLE =
             "create table " + TABLE_PQUIZZES + " (" + PQUIZ_INC
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + PQUIZ_STATE1
-                    + " TEXT, " + PQUIZ_STATE2 + " TEXT, " + PQUIZ_STATE3
-                    + " TEXT, " + PQUIZ_STATE4 + " TEXT, " + PQUIZ_STATE5
-                    + " TEXT, " + PQUIZ_STATE6 + " TEXT, " + PQUIZ_CORRECT
-                    + " INTEGER, " + PQUIZ_DATE + " LONG" + ")";
+                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + PQUIZ_CORRECT
+                    + " INTEGER, " + PQUIZ_DATE + " TEXT" + ")";
 
 
     private past_quizzes(Context context){
+
         super(context, DB_NAME, null, 1);
     }
 

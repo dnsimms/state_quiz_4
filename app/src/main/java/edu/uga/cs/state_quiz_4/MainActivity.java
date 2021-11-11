@@ -2,6 +2,7 @@ package edu.uga.cs.state_quiz_4;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentContainerView;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.opencsv.CSVReader;
 
@@ -18,11 +20,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
-    private SQLiteDatabase db;
+    private SQLiteDatabase db, pastDB;
     private SQLiteOpenHelper point;
     private InputStream streamer = null;
     private CSVReader viewer = null;
-    private Button start;
+    private Button start, viewRes;
+    private TextView text1, text2;
+    private int total = 0;
+    private String date = "";
     private ConstraintLayout splashView;
 
 
@@ -31,21 +36,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         db = loadQuizzes.getInstance(this).getWritableDatabase();
+        pastDB = past_quizzes.getInstance(this).getWritableDatabase();
 
         start = findViewById(R.id.startQuiz);
         splashView = findViewById(R.id.splashView);
+        viewRes = findViewById(R.id.viewResults);
+        text1 = findViewById(R.id.textView1);
+        text2 = findViewById(R.id.textView2);
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 db.close();
-                splashView.setVisibility(View.GONE);
+                splashView.setVisibility(View.INVISIBLE);
                 openQuiz();
             }
         });
+
+        viewRes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                splashView.setVisibility(View.INVISIBLE);
+                openPast();
+            }
+        });
+
         new populateBase().execute();
     }
 
+    public void openPast(){
+        Intent intent = new Intent(this, PastResultPage.class);
+        startActivity(intent);
+    }
     public void openQuiz() {
         Intent intent = new Intent(this, quizPager.class);
         startActivity(intent);
@@ -71,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
         }
             return true;
     }
+
+
 
     public class populateBase extends AsyncTask{
 

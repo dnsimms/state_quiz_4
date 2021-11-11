@@ -11,6 +11,7 @@ import java.io.InputStream;
 public class loadQuizzes extends SQLiteOpenHelper {
     private static final String DEBUG_TAG = "loadQuizzes";
     private int results = 0, clicks = 0;
+    private String timeTaken = "";
     private static final String DB_NAME = "quizzes.db";
     public SQLiteDatabase dataB;
 
@@ -69,15 +70,24 @@ public class loadQuizzes extends SQLiteOpenHelper {
             --results;
         }
         this.results += res;
+
         System.out.println(results);
     }
 
     public int getResults(){
-        return results;
+        return this.results;
     }
     public void setClicks(int click){
         this.clicks +=click;
     }
+    public void setTime(String date){
+        timeTaken = date;
+    }
+
+    public String getTime(){
+        return timeTaken;
+    }
+
 
     public int getClicks(){
         return clicks;

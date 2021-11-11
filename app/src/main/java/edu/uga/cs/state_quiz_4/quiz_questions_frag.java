@@ -1,7 +1,10 @@
 package edu.uga.cs.state_quiz_4;
 
+import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +17,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -36,6 +43,7 @@ public class quiz_questions_frag extends Fragment {
     private int position, totalCorrect = 0, clicks = 0;
     public ArrayList<String> quizQuestions;
     private String userAnswer = "", quesState = "";
+    private Button homeButton;
     private boolean answeredCorrectly = false, notClicked = true;
 
     private static final String DEBUG_TAG = "quiz_questions_frag";
@@ -68,6 +76,7 @@ public class quiz_questions_frag extends Fragment {
         choice3 = view.findViewById(R.id.choice3);
         title = view.findViewById(R.id.questionTitle);
         resultsText = view.findViewById(R.id.results);
+        homeButton = view.findViewById(R.id.homeButton);
         quizQuestions = new ArrayList<>();
         selectQuizzes();//grabs the quiz questions
         //puts them in the buttons
@@ -134,6 +143,7 @@ public class quiz_questions_frag extends Fragment {
         return view;
     }
 
+
     public void turnInvisible(){
         int holdClicks = loadQuizzes.getInstance(getContext()).getClicks();
         if(holdClicks == 6){
@@ -142,14 +152,64 @@ public class quiz_questions_frag extends Fragment {
             choice3.setVisibility(View.INVISIBLE);
             chosenStateName.setVisibility(View.INVISIBLE);
             resultsText.setVisibility(View.VISIBLE);
+            homeButton.setVisibility(View.VISIBLE);
             title.setText("Your Score is: ");
             String results = "" + loadQuizzes.getInstance(getContext()).getResults();
             resultsText.setText(results);
+
+            //gets the day
+            long mill = System.currentTimeMillis();
+            java.sql.Date date = new java.sql.Date(mill);
+            String dayTaken = "" + date;
+            loadQuizzes.getInstance(getContext()).setTime(dayTaken);
+
+            new enterPastQuizzes().execute();
+
+            homeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    ConstraintLayout splashView = getView().findViewById(R.id.splashView);
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+            });
+
 
 
             //chosenStateName.setText(rHelper.getResults());
         }
 
+    }
+    public class enterPastQuizzes extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] arguments) {
+            ContentValues val = new ContentValues();
+
+            String num = "" +resultsText.getText();
+            int total = Integer.parseInt(num);
+            System.out.println(total);
+            String date = "" + loadQuizzes.getInstance(getContext()).getTime();
+            val.put(past_quizzes.PQUIZ_CORRECT, total);
+            val.put(past_quizzes.PQUIZ_DATE, date);
+            boolean worked = false;
+
+            long result = past_quizzes.getInstance(getContext()).getWritableDatabase().insert(past_quizzes.TABLE_PQUIZZES, null, val);
+            if(result == -1){
+                System.out.println("past inserts failed");
+            }else{
+                worked = true;
+            }
+
+            //loadQuizzes.getInstance(getContext()).close();
+            return worked;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+
+        }
     }
 
     private void captureAnswer(String answer, String state){
